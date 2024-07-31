@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Employee Directory</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            margin: 20px;
+            font-family: Arial, sans-serif;
+        }
+        .container-box {
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            background-color: #f9f9f9;
+        }
+        .user-info {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .user-details {
+            text-align: center;
+            flex: 1;
+        }
+        .message-section {
+            margin-top: 20px;
+        }
+        .message-dropdown {
+            display: none;
+            position: absolute;
+            right: 20px;
+            top: 60px;
+            background-color: white;
+            border: 1px solid #ddd;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            max-height: 200px; /* Reduced height for the message box */
+            overflow-y: auto;
+            width: 300px; /* Reduced width for the message box */
+        }
+        .message-dropdown h5 {
+            padding: 10px;
+            margin: 0;
+            border-bottom: 1px solid #ddd;
+            background-color: #f1f1f1;
+        }
+        .message-dropdown ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .message-dropdown li {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .message-dropdown li:last-child {
+            border-bottom: none;
+        }
+        .message-dropdown a {
+            text-decoration: none;
+            display: block;
+            color: black;
+        }
+        .message-dropdown a:hover {
+            background-color: #ddd;
+        }
+        .message-btn {
+            position: relative;
+        }
+        .button-group {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        .button-group .btn {
+            font-size: 0.85rem;
+        }
+        table {
+            width: 100%;
+            margin-bottom: 20px;
+            border-collapse: separate;
+            border-spacing: 0;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        th {
+            background-color: #87CEEB; /* Sky Blue */
+            color: white;
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+        .table-container {
+            background-color: #fff; /* White background for table */
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+        }
+        .search-bar {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .search-bar input {
+            width: 200px; /* Smaller width for search bar */
+        }
+        .form-group {
+            margin-bottom: 10px;
+        }
+        .form-control-sm {
+            width: 150px; /* Reduced width for message input */
+        }
+    </style>
+    <script type="text/javascript">
+        function toggleMessageDropdown() {
+            var dropdown = document.getElementById("messageDropdown");
+            dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+        }
+
+        function filterTable() {
+            var input, filter, table, tr, td, i, j, txtValue;
+            input = document.getElementById("searchInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("employeeTable");
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 1; i < tr.length; i++) {
+                tr[i].style.display = "none";
+                td = tr[i].getElementsByTagName("td");
+                for (j = 0; j < td.length; j++) {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        window.history.forward();
+        function noBack() {
+            window.history.forward();
+        }
+    </script>
+</head>
+<body onload="noBack();" onpageshow="if (event.persisted) noBack();" onunload="">
+
+<div class="container-box">
+    <div class="user-info">
+        <div class="user-details">
+            <p>Name: <span sec:authentication="principal.username"></span></p>
+            <p><span sec:authentication="principal.authorities"></span></p>
+        </div>
+        <div class="message-btn">
+            <button class="btn btn-info" onclick="toggleMessageDropdown()">View Messages</button>
+            <div id="messageDropdown" class="message-dropdown">
+                <h5> (<span th:text="${#lists.size(messages)}"></span> Messages)</h5>
+                <ul>
+                    <li th:each="message : ${messages}">
+                        <span th:text="${message.sentBy}"></span>: <span th:text="${message.content}"></span>
+                        <em>(<span th:text="${message.sentAt}"></span>)</em>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="button-group">
+        <a th:href="@{/add-employee}" class="btn btn-primary" sec:authorize="hasRole('MANAGER')">Add Employee</a>
+        <a th:href="@{/leaders}" class="btn btn-secondary" sec:authorize="hasRole('MANAGER')">Leaders Page</a>
+        <a th:href="@{/systems}" class="btn btn-secondary" sec:authorize="hasRole('ADMIN')">Systems Page</a>
+        <a th:href="@{/logout}" class="btn btn-danger">Logout</a>
+    </div>
+
+    <div class="search-bar">
+        <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Search for names..">
+    </div>
+
+    <div class="table-container">
+        <table id="employeeTable" class="table table-bordered">
+            <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Department</th>
+                <th>Position</th>
+                <th>Email</th>
+                <th sec:authorize="hasRole('ADMIN')">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="employee : ${employees}">
+                <td th:text="${employee.firstName}">First Name</td>
+                <td th:text="${employee.lastName}">Last Name</td>
+                <td th:text="${employee.department}">Department</td>
+                <td th:text="${employee.position}">Position</td>
+                <td th:text="${employee.email}">Email</td>
+                <td sec:authorize="hasRole('ADMIN')">
+                    <a th:href="@{/edit/{id}(id=${employee.id})}" class="btn btn-warning btn-sm">Edit</a>
+                    <a th:href="@{/delete/{id}(id=${employee.id})}" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="message-section">
+        <div sec:authorize="hasRole('MANAGER')">
+            <form action="#" th:action="@{/send-message}" method="post">
+                <div class="form-group">
+                    <label for="messageContent">Message:</label>
+                    <input type="text" id="messageContent" name="content" class="form-control form-control-sm" required>
+                </div>
+                <button type="submit" class="btn btn-success btn-sm">Send</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

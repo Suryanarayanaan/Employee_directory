@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Manager Guidelines</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container-box {
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            background-color: #f9f9f9;
+        }
+        .header {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .content {
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+        .btn-custom {
+            font-size: 1rem;
+            padding: 10px 20px;
+        }
+    </style>
+    <script type="text/javascript">
+        window.history.forward();
+        function noBack() {
+            window.history.forward();
+        }
+    </script>
+</head>
+<body onload="noBack();" onpageshow="if (event.persisted) noBack();" onunload="">
+
+<div class="container container-box">
+    <div class="header">
+        <h2>Manager Guidelines</h2>
+    </div>
+
+    <hr>
+
+    <div class="content">
+        <h5>Welcome, Managers!</h5>
+        <p>As leaders, it's essential to uphold and promote the following guidelines to ensure a productive and positive work environment:</p>
+        <ul>
+            <li><strong>Effective Communication:</strong> Maintain open lines of communication with your team. Regularly provide feedback and address any concerns promptly.</li>
+            <li><strong>Lead by Example:</strong> Demonstrate the behavior and work ethic you expect from your team. Your actions set the standard.</li>
+            <li><strong>Encourage Development:</strong> Support your team members in their professional growth. Provide opportunities for training and skill development.</li>
+            <li><strong>Foster Collaboration:</strong> Promote a collaborative work environment where team members feel valued and encouraged to share their ideas.</li>
+            <li><strong>Ensure Work-Life Balance:</strong> Encourage a healthy work-life balance by respecting personal time and promoting flexible work arrangements where possible.</li>
+            <li><strong>Resolve Conflicts Fairly:</strong> Address conflicts with fairness and impartiality. Seek to understand all perspectives and work towards amicable solutions.</li>
+            <li><strong>Celebrate Achievements:</strong> Recognize and celebrate individual and team accomplishments. Appreciation fosters motivation and morale.</li>
+        </ul>
+    </div>
+
+    <hr>
+
+    <div class="text-center">
+        <a th:href="@{/home}" class="btn btn-primary btn-custom">Back to Home Page</a>
+    </div>
+
+</div>
+
+</body>
+</html>
